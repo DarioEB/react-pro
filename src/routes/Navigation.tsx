@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import {
   BrowserRouter,
   Routes,
@@ -8,48 +10,60 @@ import {
 
 import logo from '../assets/react.svg';
 
+import { lRoutes } from './routes';
+/*
+  El componente Suspense se necesitan para renderizar
+  un LazyExoticComponent, permite indicar a la interfaz que
+  se está cargando un componente
+  En fallback se debe especificar el componente de carga
+  como por ejemplo un Spinner o Pantalla de espera
+*/
 export const Navigation = () => {
 
   return (
     <>
-      <BrowserRouter>
-        <div className='main-layout'>
-          <nav>
-            <img
-              src={logo}
-              alt='Logotipo React'
-            />
-            <ul>
-              <li>
-                <NavLink
-                  to={'/'}
-                  className={({ isActive }) => isActive ? 'nav-active' : ''}
-                >Home</NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={'/about'}
-                  className={({ isActive }) => isActive ? 'nav-active' : ''}
-                >About</NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={'/users'}
-                  className={({ isActive }) => isActive ? 'nav-active' : ''}
-                >Users</NavLink>
-              </li>
-            </ul>
-          </nav>
+      <Suspense
+        fallback={null}
+      >
+        <BrowserRouter>
+          <div className='main-layout'>
+            <nav>
+              <img
+                src={logo}
+                alt='Logotipo React'
+              />
+              <ul>
+                {
+                  lRoutes.map(({ to, name }) => (
+                    <li
+                      key={to}
+                    >
+                      <NavLink
+                        to={to}
+                        className={({ isActive }) => isActive ? 'nav-active' : ''}
+                      >{name}</NavLink>
+                    </li>
+                  ))
+                }
+              </ul>
+            </nav>
 
-          <Routes>
-            <Route path={'about'} element={<h1>About</h1>} />
-            <Route path={'users'} element={<h1>Users</h1>} />
-            <Route path={'/'} element={<h1>Home</h1>} />
-            <Route path={'/*'} element={<Navigate to={'/'} replace />} />
-          </Routes>
+            <Routes>
+              {
+                lRoutes.map(({ path, Component }) => (
+                  <Route
+                    key={path}
+                    path={path}
+                    element={<Component />}
+                  />
+                ))
+              }
+              <Route path={'/*'} element={<Navigate replace to={lRoutes[0].to} />} />
+            </Routes>
 
-        </div>
-      </BrowserRouter>
+          </div>
+        </BrowserRouter>
+      </Suspense>
     </>
   )
 }
