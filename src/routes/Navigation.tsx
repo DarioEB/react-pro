@@ -10,7 +10,7 @@ import {
 
 import logo from '../assets/react.svg';
 
-import { routes } from './routes';
+import { lRoutes } from './routes';
 /*
   El componente Suspense se necesitan para renderizar
   un LazyExoticComponent, permite indicar a la interfaz que
@@ -34,7 +34,7 @@ export const Navigation = () => {
               />
               <ul>
                 {
-                  routes.map(({ to, name }) => (
+                  lRoutes.map(({ to, name }) => (
                     <li
                       key={to}
                     >
@@ -50,7 +50,7 @@ export const Navigation = () => {
 
             <Routes>
               {
-                routes.map(({ path, Component }) => (
+                lRoutes.map(({ path, Component }) => (
                   <Route
                     key={path}
                     path={path}
@@ -58,7 +58,7 @@ export const Navigation = () => {
                   />
                 ))
               }
-              <Route path={'/*'} element={<Navigate to={routes[0].to} replace />} />
+              <Route path={'/*'} element={<Navigate replace to={lRoutes[0].to} />} />
             </Routes>
 
           </div>
